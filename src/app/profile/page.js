@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react'
 
-export default async function Home() {
+export default function Home() {
 
   const clientId = "a597c60b87d74f488451670834354d01"; 
 
@@ -11,13 +11,39 @@ export default async function Home() {
       // Access the window object only on the client-side
       const params = new URLSearchParams(window.location.search);
       const code = params.get('code');
+      console.log(code);
       
       if (!code) {
         redirectToAuthCodeFlow(clientId);
       } else {
-        getAccessToken(clientId, code)
-          .then((accessToken) => fetchProfile(accessToken))
-          .then((profile) => populateUI(profile))
+        if (!localStorage.getItem("token")) {
+          getAccessToken(clientId, code)
+            .then((accessToken) => fetchProfile(accessToken))
+            .then((profile) => populateUI(profile))
+            .catch((error) => {
+              console.error(error);
+            });
+        } else {
+          fetchProfile(localStorage.getItem("token"))
+            .then((profile) => populateUI(profile))
+            .catch((error) => {
+              console.error(error);
+            }
+          );
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const accessToken = localStorage.getItem('token')
+      console.log(accessToken);
+      if (!accessToken) {
+        console.log("No access token found");
+      } else {
+        fetchTopTracks(accessToken)
+          .then((tracks) => console.log(tracks))
           .catch((error) => {
             console.error(error);
           });
@@ -30,12 +56,13 @@ export default async function Home() {
     const challenge = await generateCodeChallenge(verifier);
 
     localStorage.setItem("verifier", verifier);
+    localStorage.removeItem("token");
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/profile");
-    params.append("scope", "user-read-private user-read-email");
+    params.append("scope", "user-read-private user-read-email user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -61,8 +88,6 @@ export default async function Home() {
         .replace(/=+$/, '');
   }
 
-
-
   async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
 
@@ -80,6 +105,8 @@ export default async function Home() {
     });
 
     const { access_token } = await result.json();
+    console.log(access_token);
+    localStorage.setItem("token", access_token);
     return access_token;
   }
   
@@ -95,18 +122,24 @@ export default async function Home() {
   
   function populateUI(profile) {
     document.getElementById("displayName").innerText = profile.display_name;
-    if (profile.images[0]) {
-        const profileImage = new Image(200, 200);
-        profileImage.src = profile.images[0].url;
-        document.getElementById("avatar").appendChild(profileImage);
-        document.getElementById("imgUrl").innerText = profile.images[0].url;
-    }
     document.getElementById("id").innerText = profile.id;
     document.getElementById("email").innerText = profile.email;
     document.getElementById("uri").innerText = profile.uri;
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
+  }
+
+  async function fetchTopTracks(token) {
+    const response = await fetch('https://api.spotify.com/v1/me/top/tracks?limit=10', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+    console.log(data);
+    return data.items;
   }
 
   return (
