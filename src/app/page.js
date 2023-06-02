@@ -14,10 +14,21 @@ export default function Home() {
         console.log('No access token found');
       } else {
         fetchTopArtists(accessToken);
-        fetchRecommendedTracksByTopArtists(accessToken);
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (topArtists.length > 0) {
+        const accessToken = localStorage.getItem('token');
+        if (!accessToken) {
+          console.log('No access token found');
+        } else {
+          fetchRecommendedTracksByTopArtists(accessToken, topArtists);
+        }
+      }
+    }}, [topArtists]);
 
   useEffect(() => {
     console.log('Updated Top Artists:', topArtists);
@@ -41,9 +52,9 @@ export default function Home() {
   }
 
   // function for fetching recommended tracks based on top 5 artists
-  async function fetchRecommendedTracksByTopArtists(accessToken) {
+  async function fetchRecommendedTracksByTopArtists(accessToken, artists) {
     const response = await fetch(
-      `https://api.spotify.com/v1/recommendations?limit=100&seed_artists=${topArtists.join(',')}`,
+      `https://api.spotify.com/v1/recommendations?limit=100&seed_artists=${artists.join(',')}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
