@@ -9,14 +9,14 @@ import Image from 'next/image';
 
 import { useState } from 'react';
 
-export default function SongCard({ track, handleLike, handleDislike }) {
+export default function SongCard({ track, handleLike, handleDislike, handlePlay }) {
 
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const [playing, setPlaying] = useState(false);
 
   return (
-    <div className="flex flex-col mx-auto justify-center items-center object-center w-full sm:max-w-lg h-screen">
+    <div className="flex flex-col mx-auto justify-center items-center object-center w-3/4 sm:max-w-sm h-screen">
       <img src={track.album.images[0].url} alt={track.name} className=' w-full sm:w-full'/>
       <div className="flex flex-col self-start">
         <h3>{track.name}</h3>
@@ -27,7 +27,7 @@ export default function SongCard({ track, handleLike, handleDislike }) {
           <button className='' onClick={() => handleDislike()}>
             {disliked ? <DeleteSweepIcon /> : <DeleteSweepOutlinedIcon />}
           </button>
-          <button onClick={() => setPlaying(!playing)}>
+          <button onClick={() => handlePlay()}>
             {playing ? <PauseCircleFilledOutlinedIcon /> : <PlayCircleFilledOutlinedIcon />}
           </button>
           <button onClick={() => handleLike()}>

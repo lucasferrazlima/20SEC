@@ -37,7 +37,7 @@ export default function LoginPage() {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/login");
-    params.append("scope", "user-read-private user-read-email user-top-read");
+    params.append("scope", "user-read-private user-read-email user-top-read user-modify-playback-state user-read-playback-state user-read-currently-playing streaming");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 

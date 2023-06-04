@@ -3,10 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
+import { Helmet } from 'react-helmet';
+
 import SongCard from '@/components/SongCard';
 
 
-export default function Home() {
+export default function DiscoverPage() {
+
   const [topArtists, setTopArtists] = useState([]);
   const [recommendedTracks, setRecommendedTracks] = useState([]);
 
@@ -14,8 +17,30 @@ export default function Home() {
   const [dislikedTracks, setDislikedTracks] = useState([]);
   const [knownTracks, setKnownTracks] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [player, setPlayer] = useState(undefined);
+  const [deviceList, setDeviceList] = useState([]);
 
   const router = useRouter();
+
+  const getDevices = async () => {
+    const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((res) => res.json())
+      .then(data => {
+        const devices = data.devices;
+        console.log('devices:', devices);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+
+
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -41,6 +66,19 @@ export default function Home() {
         }
       }
     }}, [topArtists]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (recommendedTracks.length > 0) {
+        const accessToken = localStorage.getItem('token');
+        if (!accessToken || accessToken === 'undefined') {
+          router.push('/login');
+        } else {
+          getDevices();
+        }
+      }
+    }
+  }, []);
 
   useEffect(() => {
     console.log('Updated Top Artists:', topArtists);
@@ -95,6 +133,28 @@ export default function Home() {
     setCurrentTrackIndex(currentTrackIndex + 1);
   }
 
+  const handlePlay = async() => {
+    () => setPlaying(!playing)
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me/player/play', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    },
+      body: JSON.stringify({
+        uris: [recommendedTracks[0][currentTrackIndex].uri],
+        position_ms: 0
+      }),
+    });
+
+    const data = await res.json();
+    console.log(data);  
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     console.log('Liked Tracks:', likedTracks);
   }, [likedTracks]);
@@ -103,11 +163,47 @@ export default function Home() {
     console.log('Disliked Tracks:', dislikedTracks);
   }, [dislikedTracks]);
 
+  useEffect(() => {
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const player = new Spotify.Player({
+        name: 'New Music Discoverer',
+        getOAuthToken: async (callback) => {
+          const accessToken = localStorage.getItem('token');
+          callback(accessToken);
+        },
+        volume: 0.5
+      });
+  
+      setPlayer(player);
+
+      // Listen to events
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
+  
+      player.addListener('player_state_changed', (state) => {
+        console.log('Player State Changed', state);
+      });
+  
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player
+      player.connect();
+
+    };
+  }, []);
+  
+
   return (
     <div className='content-center items-center'>
+      <Helmet>
+        <script src="https://sdk.scdn.co/spotify-player.js" defer></script>
+      </Helmet>
       {
         recommendedTracks.length > 0 && (
-          <SongCard track={recommendedTracks[0][currentTrackIndex]} handleLike={handleLike} handleDislike={handleDislike} />
+          <SongCard track={recommendedTracks[0][currentTrackIndex]} handleLike={handleLike} handleDislike={handleDislike} handlePlay={handlePlay}/>
         )
       }
     </div>
