@@ -26,7 +26,6 @@ export default function DiscoverPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const accessToken = localStorage.getItem('token');
-      console.log(accessToken);
       if (!accessToken || accessToken === 'undefined') {
         // go to login page
         router.push('/login');
@@ -48,23 +47,6 @@ export default function DiscoverPage() {
       }
     }}, [topArtists]);
 
-
-
-  useEffect(() => {
-    console.log('Updated Top Artists:', topArtists);
-  }, [topArtists]);
-
-  useEffect(() => {
-    console.log('Updated Recommended Tracks:', recommendedTracks);  
-  }, []);
-
-  useEffect(() => {
-    console.log('Liked Tracks:', likedTracks);
-  }, [likedTracks]);
-
-  useEffect(() => {
-    console.log('Disliked Tracks:', dislikedTracks);
-  }, [dislikedTracks]);
 
   // web playback SDK setup
   useEffect(() => {
@@ -158,7 +140,6 @@ export default function DiscoverPage() {
 
       const deviceName = 'New Music Discoverer'
       const device = deviceList.find(device => device.name === deviceName);
-      console.log('dqwhduqhnwdu', device);
 
       if (!device) {
         console.log('Device not found');
@@ -199,7 +180,6 @@ export default function DiscoverPage() {
       .then((res) => res.json())
       .then(data => {
         setDeviceList(data.devices);
-        console.log('devicesss:', data.devices);
       })
       .catch((error) => {
         console.log(error);
