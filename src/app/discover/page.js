@@ -22,25 +22,6 @@ export default function DiscoverPage() {
 
   const router = useRouter();
 
-  const getDevices = async () => {
-    const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-    })
-      .then((res) => res.json())
-      .then(data => {
-        const devices = data.devices;
-        console.log('devices:', devices);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }
-
-
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -67,18 +48,7 @@ export default function DiscoverPage() {
       }
     }}, [topArtists]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (recommendedTracks.length > 0) {
-        const accessToken = localStorage.getItem('token');
-        if (!accessToken || accessToken === 'undefined') {
-          router.push('/login');
-        } else {
-          getDevices();
-        }
-      }
-    }
-  }, []);
+
 
   useEffect(() => {
     console.log('Updated Top Artists:', topArtists);
@@ -86,7 +56,56 @@ export default function DiscoverPage() {
 
   useEffect(() => {
     console.log('Updated Recommended Tracks:', recommendedTracks);  
-  }, [recommendedTracks]);
+  }, []);
+
+  useEffect(() => {
+    console.log('Liked Tracks:', likedTracks);
+  }, [likedTracks]);
+
+  useEffect(() => {
+    console.log('Disliked Tracks:', dislikedTracks);
+  }, [dislikedTracks]);
+
+  // web playback SDK setup
+  useEffect(() => {
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const player = new Spotify.Player({
+        name: 'New Music Discoverer',
+        getOAuthToken: async (callback) => {
+          const accessToken = localStorage.getItem('token');
+          callback(accessToken);
+        },
+        volume: 0.5
+      });
+  
+      setPlayer(player);
+      player.activateElement();
+
+      // Listen to events
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        getDevices();
+      });
+  
+      player.addListener('player_state_changed', (state) => {
+        console.log('Player State Changed', state);
+      });
+  
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player
+      player.connect();
+
+    };
+  }, [])
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      getDevices();
+    }
+    }, []);
 
   // function for fetching top 5 artists of user
   async function fetchTopArtists(accessToken) {
@@ -133,10 +152,22 @@ export default function DiscoverPage() {
     setCurrentTrackIndex(currentTrackIndex + 1);
   }
 
+  // function for playing track using web playback SDK
   const handlePlay = async() => {
-    () => setPlaying(!playing)
     try {
-      const res = await fetch('https://api.spotify.com/v1/me/player/play', {
+
+      const deviceName = 'New Music Discoverer'
+      const device = deviceList.find(device => device.name === deviceName);
+      console.log('dqwhduqhnwdu', device);
+
+      if (!device) {
+        console.log('Device not found');
+        return;
+      }
+
+      const device_id = device.id;
+
+      const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -155,46 +186,27 @@ export default function DiscoverPage() {
     }
   }
 
-  useEffect(() => {
-    console.log('Liked Tracks:', likedTracks);
-  }, [likedTracks]);
 
-  useEffect(() => {
-    console.log('Disliked Tracks:', dislikedTracks);
-  }, [dislikedTracks]);
-
-  useEffect(() => {
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const player = new Spotify.Player({
-        name: 'New Music Discoverer',
-        getOAuthToken: async (callback) => {
-          const accessToken = localStorage.getItem('token');
-          callback(accessToken);
-        },
-        volume: 0.5
+  // function for getting list of devices tied to user account
+  const getDevices = async () => {
+    const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+    })
+      .then((res) => res.json())
+      .then(data => {
+        setDeviceList(data.devices);
+        console.log('devicesss:', data.devices);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-  
-      setPlayer(player);
+    }
 
-      // Listen to events
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
-  
-      player.addListener('player_state_changed', (state) => {
-        console.log('Player State Changed', state);
-      });
-  
-      player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-      });
 
-      // Connect to the player
-      player.connect();
-
-    };
-  }, []);
-  
 
   return (
     <div className='content-center items-center'>
