@@ -7,7 +7,6 @@ import { Helmet } from 'react-helmet';
 
 import SongCard from '@/components/SongCard';
 
-
 export default function DiscoverPage() {
 
   const [topArtists, setTopArtists] = useState([]);
@@ -89,6 +88,26 @@ export default function DiscoverPage() {
     }
     }, []);
 
+  const handleLike = () => {
+    setLikedTracks([...likedTracks, recommendedTracks[0][currentTrackIndex]]);
+    setCurrentTrackIndex(currentTrackIndex + 1);
+  }
+
+  const handleDislike = () => {
+    setDislikedTracks([...dislikedTracks, recommendedTracks[0][currentTrackIndex]]);
+    setCurrentTrackIndex(currentTrackIndex + 1);
+  }
+
+  // If user likes 15 tracks, automatically redirect to export page
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (likedTracks.length === 15) {
+        handleExport();
+      }
+    }
+  }, [likedTracks]
+  );
+
   // function for fetching top 5 artists of user
   async function fetchTopArtists(accessToken) {
     const response = await fetch('https://api.spotify.com/v1/me/top/artists?limit=5', {
@@ -124,15 +143,7 @@ export default function DiscoverPage() {
   }
       
 
-  const handleLike = () => {
-    setLikedTracks([...likedTracks, recommendedTracks[0][currentTrackIndex]]);
-    setCurrentTrackIndex(currentTrackIndex + 1);
-  }
 
-  const handleDislike = () => {
-    setDislikedTracks([...dislikedTracks, recommendedTracks[0][currentTrackIndex]]);
-    setCurrentTrackIndex(currentTrackIndex + 1);
-  }
 
   let stopTimeout;
 
@@ -215,7 +226,11 @@ export default function DiscoverPage() {
       });
     }
 
-
+  const handleExport = () => {
+    const likedTracksString = JSON.stringify(likedTracks);
+    localStorage.setItem('likedTracks', likedTracksString);
+    router.push('/export');
+  }
 
   return (
     <div className='content-center items-center'>
@@ -227,6 +242,7 @@ export default function DiscoverPage() {
           <SongCard track={recommendedTracks[0][currentTrackIndex]} handleLike={handleLike} handleDislike={handleDislike} handlePlay={handlePlay}/>
         )
       }
+      <button onClick={() => handleExport()}>Export liked tracks</button>
     </div>
   );
 }

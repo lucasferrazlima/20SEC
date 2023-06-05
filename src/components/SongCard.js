@@ -25,13 +25,13 @@ export default function SongCard({ track, handleLike, handleDislike, handlePlay 
           </p>
         <div className="flex justify-evenly">
           <button className='' onClick={() => handleDislike()}>
-            {disliked ? <DeleteSweepIcon /> : <DeleteSweepOutlinedIcon />}
+            {disliked ? <DeleteSweepIcon /> : <DeleteSweepOutlinedIcon style={{ color:'#b3b3b3' }}/>}
           </button>
           <button onClick={() => handlePlay()}>
-            {playing ? <PauseCircleFilledOutlinedIcon /> : <PlayCircleFilledOutlinedIcon />}
+            {playing ? <PauseCircleFilledOutlinedIcon /> : <PlayCircleFilledOutlinedIcon style={{ color:'#b3b3b3' }}/>}
           </button>
           <button onClick={() => handleLike()}>
-            {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
+            {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon style={{ color:'#b3b3b3' }}/>}
           </button>
         </div>
       </div>
