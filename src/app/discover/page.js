@@ -134,39 +134,68 @@ export default function DiscoverPage() {
     setCurrentTrackIndex(currentTrackIndex + 1);
   }
 
+  let stopTimeout;
+
   // function for playing track using web playback SDK
   const handlePlay = async() => {
+
     try {
-
-      const deviceName = 'New Music Discoverer'
+      const deviceName = 'New Music Discoverer';
       const device = deviceList.find(device => device.name === deviceName);
-
+  
       if (!device) {
         console.log('Device not found');
         return;
       }
-
+  
       const device_id = device.id;
-
+  
       const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    },
-      body: JSON.stringify({
-        uris: [recommendedTracks[0][currentTrackIndex].uri],
-        position_ms: 0
-      }),
-    });
+        },
+        body: JSON.stringify({
+          uris: [recommendedTracks[0][currentTrackIndex].uri],
+          position_ms: 20000,
+        }),
+      });
+  
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
 
-    const data = await res.json();
-    console.log(data);  
+    if (stopTimeout) {
+      clearTimeout(stopTimeout);
+    }
+
+    // stop track after 20 seconds
+    stopTimeout = setTimeout(() => {
+      console.log('Stopping track')
+      handleStop();
+    }, 21500);
+  };
+
+  // function for stopping track using web playback SDK
+  const handleStop = async() => {
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me/player/pause', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      const data = await res.json();
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
   }
-
 
   // function for getting list of devices tied to user account
   const getDevices = async () => {
