@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Helmet } from 'react-helmet';
 
 import SongCard from '@/components/SongCard';
+import SelectRecommendation from '@/components/SelectRecommendation';
 
 export default function DiscoverPage() {
 
@@ -18,6 +19,9 @@ export default function DiscoverPage() {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [player, setPlayer] = useState(undefined);
   const [deviceList, setDeviceList] = useState([]);
+  const [recommendationType, setRecommendationType] = useState('top artists');
+  const [searchedArtist, setSearchedArtist] = useState('');
+  const [topArtistsFetched, setTopArtistsFetched] = useState(true);
 
   const router = useRouter();
 
@@ -41,11 +45,18 @@ export default function DiscoverPage() {
         if (!accessToken || accessToken === 'undefined') {
           router.push('/login');
         } else {
-          fetchRecommendedTracksByTopArtists(accessToken, topArtists);
+          if (recommendationType === 'top artists') {
+            fetchRecommendedTracksByTopArtists(accessToken, topArtists);
+          }
         }
       }
-    }}, [topArtists]);
+    }}, [topArtists, recommendationType]);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('recommendation type', recommendationType);
+    }
+  }, [recommendationType]);
 
   // web playback SDK setup
   useEffect(() => {
@@ -237,9 +248,10 @@ export default function DiscoverPage() {
       <Helmet>
         <script src="https://sdk.scdn.co/spotify-player.js" defer></script>
       </Helmet>
+      <SelectRecommendation recommendationType={recommendationType} setRecommendationType={setRecommendationType} searchedArtist={searchedArtist} setSearchedArtist={setSearchedArtist} recommendedTracks={recommendedTracks} setRecommendedTracks={setRecommendedTracks}/>
       {
         recommendedTracks.length > 0 && (
-          <SongCard track={recommendedTracks[0][currentTrackIndex]} handleLike={handleLike} handleDislike={handleDislike} handlePlay={handlePlay}/>
+          <SongCard track={recommendedTracks[0][currentTrackIndex]} handleLike={handleLike} handleDislike={handleDislike} handlePlay={handlePlay} />
         )
       }
       <button onClick={() => handleExport()}>Export liked tracks</button>
