@@ -26,6 +26,13 @@ export default function LoginPage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const accessToken = localStorage.getItem('token');
+      fetchProfile(accessToken);
+    }
+  }, []);
+
   async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
@@ -37,7 +44,7 @@ export default function LoginPage() {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:3000/login");
-    params.append("scope", "user-read-private user-read-email user-top-read user-modify-playback-state user-read-playback-state user-read-currently-playing streaming");
+    params.append("scope", "user-read-private user-read-email user-top-read user-modify-playback-state user-read-playback-state user-read-currently-playing streaming playlist-modify-public playlist-modify-private");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -81,6 +88,16 @@ export default function LoginPage() {
 
     const { access_token } = await result.json();
     localStorage.setItem("token", access_token);
+    fetchProfile();
     return access_token;
+  }
+
+  async function fetchProfile() {
+    const token = localStorage.getItem("token");
+    const result = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    const profileData = await result.json();
+    localStorage.setItem('userId', profileData.id)
   }
 }
