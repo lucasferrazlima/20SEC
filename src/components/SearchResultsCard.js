@@ -1,17 +1,27 @@
-import { Search } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 
-export default function SearchResultsCard({ searchResults, setSearchResults, result, recommendedTracks, setRecommendedTracks, searchedArtist, setSearchedArtist, recommendationType, setRecommendationType }) {
-
+export default function SearchResultsCard({
+  searchResults,
+  setSearchResults,
+  result,
+  recommendedTracks,
+  setRecommendedTracks,
+  searchedArtist,
+  setSearchedArtist,
+  recommendationType,
+  setRecommendationType,
+}) {
   const [selectedArtistId, setSelectedArtistId] = useState(null);
 
   // select smallest image for the src of the SearchResultsCard
-  const smallestImage = result.images.reduce((smallest, image) => {
-    if (image.height < smallest.height) {
-      return image;
-    }
-    return smallest;
-  });
+  const smallestImage = result.images.length > 0
+    ? result.images.reduce((smallest, image) => {
+      if (image.height < smallest.height) {
+        return image;
+      }
+      return smallest;
+    })
+    : null;
 
   // fetch spotify API for recommended tracks based on searched artist
   useEffect(() => {
@@ -25,7 +35,6 @@ export default function SearchResultsCard({ searchResults, setSearchResults, res
     }
   }, [selectedArtistId]);
 
-
   // function for fetching recommended tracks based on searched artist
   async function fetchRecommendedTracksBySearchedArtist(accessToken) {
     const response = await fetch(
@@ -34,7 +43,7 @@ export default function SearchResultsCard({ searchResults, setSearchResults, res
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -44,14 +53,16 @@ export default function SearchResultsCard({ searchResults, setSearchResults, res
   const handleSearchResultsCardClick = async () => {
     await setSelectedArtistId(result.id);
     setSearchedArtist('');
-  }   
+  };
 
   return (
-    <button  onClick={() => handleSearchResultsCardClick()} className="flex bg-red-300">
-      <div className='w-1/12 '>
-        <img src={smallestImage.url} alt={result.name} className="object-contain" />
+    <button type="button" onClick={() => handleSearchResultsCardClick()} className="flex my-2 w-full hover:opacity-70">
+      <div className=" w-14 h-14 sm:w-20 sm:h-20">
+        {smallestImage && (
+        <img src={smallestImage.url} alt={result.name} className="rounded-full w-full h-full" />
+        )}
       </div>
-      <p className=''>{result.name}</p>
+      <p className="self-center ml-4 font-semibold">{result.name}</p>
     </button>
-  )
+  );
 }

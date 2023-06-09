@@ -13,12 +13,17 @@ module.exports = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
-        'primary':'#1db954',
-        'secondary':'#191414',
-        'tertiary':'#ffffff',
-        'quaternary':'#b3b3b3',
-      }
+        primary: '#1db954',
+        secondary: '#191414',
+        tertiary: '#ffffff',
+        quaternary: '#b3b3b3',
+      },
+      fontFamily: {
+        oswald: ['Oswald', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        azeret: ['Azeret Mono', 'monospace'],
+      },
     },
   },
   plugins: [],
-}
+};

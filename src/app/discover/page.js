@@ -1,15 +1,17 @@
-"use client"
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import { Helmet } from 'react-helmet';
 
+import '@fontsource/azeret-mono';
+import '@fontsource/montserrat';
+import '@fontsource/oswald';
 import SongCard from '@/components/SongCard';
 import SelectRecommendation from '@/components/SelectRecommendation';
 
 export default function DiscoverPage() {
-
   const [topArtists, setTopArtists] = useState([]);
   const [recommendedTracks, setRecommendedTracks] = useState([]);
 
@@ -24,7 +26,6 @@ export default function DiscoverPage() {
   const [topArtistsFetched, setTopArtistsFetched] = useState(true);
 
   const router = useRouter();
-
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -44,19 +45,12 @@ export default function DiscoverPage() {
         const accessToken = localStorage.getItem('token');
         if (!accessToken || accessToken === 'undefined') {
           router.push('/login');
-        } else {
-          if (recommendationType === 'top artists') {
-            fetchRecommendedTracksByTopArtists(accessToken, topArtists);
-          }
+        } else if (recommendationType === 'top artists') {
+          fetchRecommendedTracksByTopArtists(accessToken, topArtists);
         }
       }
-    }}, [topArtists, recommendationType]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      console.log('recommendation type', recommendationType);
     }
-  }, [recommendationType]);
+  }, [topArtists, recommendationType]);
 
   // web playback SDK setup
   useEffect(() => {
@@ -67,9 +61,9 @@ export default function DiscoverPage() {
           const accessToken = localStorage.getItem('token');
           callback(accessToken);
         },
-        volume: 0.5
+        volume: 0.5,
       });
-  
+
       setPlayer(player);
       player.activateElement();
 
@@ -78,36 +72,35 @@ export default function DiscoverPage() {
         console.log('Ready with Device ID', device_id);
         getDevices();
       });
-  
+
       player.addListener('player_state_changed', (state) => {
         console.log('Player State Changed', state);
       });
-  
+
       player.addListener('not_ready', ({ device_id }) => {
         console.log('Device ID has gone offline', device_id);
       });
 
       // Connect to the player
       player.connect();
-
     };
-  }, [])
-  
+  }, []);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       getDevices();
     }
-    }, []);
+  }, []);
 
   const handleLike = () => {
     setLikedTracks([...likedTracks, recommendedTracks[0][currentTrackIndex]]);
     setCurrentTrackIndex(currentTrackIndex + 1);
-  }
+  };
 
   const handleDislike = () => {
     setDislikedTracks([...dislikedTracks, recommendedTracks[0][currentTrackIndex]]);
     setCurrentTrackIndex(currentTrackIndex + 1);
-  }
+  };
 
   // If user likes 15 tracks, automatically redirect to export page
   useEffect(() => {
@@ -116,8 +109,7 @@ export default function DiscoverPage() {
         handleExport();
       }
     }
-  }, [likedTracks]
-  );
+  }, [likedTracks]);
 
   // function for fetching top 5 artists of user
   async function fetchTopArtists(accessToken) {
@@ -135,7 +127,6 @@ export default function DiscoverPage() {
       .catch((error) => {
         router.push('/login');
       });
-
   }
 
   // function for fetching recommended tracks based on top 5 artists
@@ -146,46 +137,41 @@ export default function DiscoverPage() {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     const data = await response.json();
     setRecommendedTracks([data.tracks]);
   }
-      
-
-
 
   let stopTimeout;
 
   // function for playing track using web playback SDK
-  const handlePlay = async() => {
-
+  const handlePlay = async () => {
     try {
       const deviceName = 'New Music Discoverer';
-      const device = deviceList.find(device => device.name === deviceName);
-  
+      const device = deviceList.find((device) => device.name === deviceName);
+
       if (!device) {
         console.log('Device not found');
         return;
       }
-  
+
       const device_id = device.id;
-  
+
       const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           uris: [recommendedTracks[0][currentTrackIndex].uri],
           position_ms: 20000,
         }),
       });
-  
+
       const data = await res.json();
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -196,28 +182,26 @@ export default function DiscoverPage() {
 
     // stop track after 20 seconds
     stopTimeout = setTimeout(() => {
-      console.log('Stopping track')
       handleStop();
     }, 21500);
   };
 
   // function for stopping track using web playback SDK
-  const handleStop = async() => {
+  const handleStop = async () => {
     try {
       const res = await fetch('https://api.spotify.com/v1/me/player/pause', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
 
       const data = await res.json();
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   // function for getting list of devices tied to user account
   const getDevices = async () => {
@@ -225,36 +209,53 @@ export default function DiscoverPage() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     })
       .then((res) => res.json())
-      .then(data => {
+      .then((data) => {
         setDeviceList(data.devices);
       })
       .catch((error) => {
         console.log(error);
       });
-    }
+  };
 
   const handleExport = () => {
     const likedTracksString = JSON.stringify(likedTracks);
     localStorage.setItem('likedTracks', likedTracksString);
     router.push('/export');
-  }
+  };
 
   return (
-    <div className='content-center items-center'>
+    <div className="flex flex-col content-center items-center justify-center min-h-screen">
       <Helmet>
-        <script src="https://sdk.scdn.co/spotify-player.js" defer></script>
+        <script src="https://sdk.scdn.co/spotify-player.js" defer />
       </Helmet>
-      <SelectRecommendation recommendationType={recommendationType} setRecommendationType={setRecommendationType} searchedArtist={searchedArtist} setSearchedArtist={setSearchedArtist} recommendedTracks={recommendedTracks} setRecommendedTracks={setRecommendedTracks}/>
+      <div className="flex flex-row gap-3 items-center pb-20 md:pb-0 md:absolute md:self-start md:justify-start md:top-10 md:left-5 sm:pb-4">
+        <h1 className="text-4xl text-primary font-montserrat md:text-5xl">20SEC</h1>
+        <span className="text-sm font-montserrat text-quaternary">for</span>
+        <img src="/spotify.svg" alt="spotify logo" className="w-8 h-8" />
+      </div>
+      <SelectRecommendation
+        recommendationType={recommendationType}
+        setRecommendationType={setRecommendationType}
+        searchedArtist={searchedArtist}
+        setSearchedArtist={setSearchedArtist}
+        recommendedTracks={recommendedTracks}
+        setRecommendedTracks={setRecommendedTracks}
+      />
       {
         recommendedTracks.length > 0 && (
-          <SongCard track={recommendedTracks[0][currentTrackIndex]} handleLike={handleLike} handleDislike={handleDislike} handlePlay={handlePlay} />
+          <SongCard
+            track={recommendedTracks[0][currentTrackIndex]}
+            handleLike={handleLike}
+            handleDislike={handleDislike}
+            handlePlay={handlePlay}
+            handleExport={handleExport}
+          />
         )
       }
-      <button onClick={() => handleExport()}>Export liked tracks</button>
     </div>
   );
 }

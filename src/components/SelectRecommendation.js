@@ -1,22 +1,56 @@
-"use client"
+'use client';
 
-import { useState } from 'react';
 import SearchArtist from '@/components/SearchArtist';
 
-export default function SelectRecommendation({ recommendationType,setRecommendationType, searchedArtist, setSearchedArtist, recommendedTracks, setRecommendedTracks}) {
-
+export default function SelectRecommendation({
+  recommendationType,
+  setRecommendationType,
+  searchedArtist,
+  setSearchedArtist,
+  recommendedTracks,
+  setRecommendedTracks,
+}) {
   return (
-    <div className="flex flex-col">
-      <p>Hello, {localStorage.getItem('userId')}</p>
-      <p>Recommendation based on:</p>
-      <div className="flex">
-        <button onClick={() => setRecommendationType('top artists')} className="bg-primary rounded-md text-white">Your Top Artists</button>
-        <button onClick={() => setRecommendationType('searched artist')} className="bg-primary rounded-md text-white">Searched Artist</button>
+    <div className="flex flex-col items-center mb-4">
+      <div className="flex gap-10 sm:gap-20">
+        <button
+          type="button"
+          onClick={() => setRecommendationType('top artists')}
+          className={
+            recommendationType === 'top artists'
+              ? 'text-xs text-primary font-semibold'
+              : 'text-quaternary text-xs font-semibold'
+          }
+        >
+          Your Top Artists
+        </button>
+        <button
+          type="button"
+          onClick={() => setRecommendationType('searched artist')}
+          className={
+            recommendationType === 'searched artist'
+              ? 'text-primary text-xs font-semibold'
+              : 'text-quaternary text-xs font-semibold'
+          }
+        >
+          Search Artist
+        </button>
       </div>
-      <div>
-        {recommendationType === 'searched artist' ? <SearchArtist searchedArtist={searchedArtist} setSearchedArtist={setSearchedArtist} recommendadedTracks={recommendedTracks} setRecommendedTracks={setRecommendedTracks} recommendationType={recommendationType} setRecommendationType={setRecommendationType} /> : null
-        }
+      <div className="flex flex-col content-center mx-auto items-center">
+        {
+        recommendationType === 'searched artist'
+          ? (
+            <SearchArtist
+              searchedArtist={searchedArtist}
+              setSearchedArtist={setSearchedArtist}
+              recommendedTracks={recommendedTracks}
+              setRecommendedTracks={setRecommendedTracks}
+              recommendationType={recommendationType}
+              setRecommendationType={setRecommendationType}
+            />
+          ) : null
+}
       </div>
     </div>
-  )
+  );
 }

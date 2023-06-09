@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.like-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .like-icon {
+    transition: color 0.3s ease;
+  }
+  
+  .like-button:hover .like-icon {
+    color: #1db954;
+  }
