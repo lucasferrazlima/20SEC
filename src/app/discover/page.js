@@ -5,9 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Helmet } from 'react-helmet';
 
-import '@fontsource/azeret-mono';
-import '@fontsource/montserrat';
-import '@fontsource/oswald';
+import '@fontsource/bebas-neue';
 import SongCard from '@/components/SongCard';
 import SelectRecommendation from '@/components/SelectRecommendation';
 
@@ -233,8 +231,8 @@ export default function DiscoverPage() {
         <script src="https://sdk.scdn.co/spotify-player.js" defer />
       </Helmet>
       <div className="flex flex-row gap-3 items-center pb-20 md:pb-0 md:absolute md:self-start md:justify-start md:top-10 md:left-5 sm:pb-4">
-        <h1 className="text-4xl text-primary font-montserrat md:text-5xl">20SEC</h1>
-        <span className="text-sm font-montserrat text-quaternary">for</span>
+        <h1 className="text-4xl text-primary font-bebas md:text-5xl">20SEC</h1>
+        <span className="text-sm font-bebas text-quaternary">for</span>
         <img src="/spotify.svg" alt="spotify logo" className="w-8 h-8" />
       </div>
       <SelectRecommendation

@@ -22,6 +22,7 @@ module.exports = {
         oswald: ['Oswald', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
         azeret: ['Azeret Mono', 'monospace'],
+        bebas: ['Bebas Neue', 'sans-serif'],
       },
     },
   },
