@@ -6,6 +6,7 @@ import '@fontsource/bebas-neue';
 import '@fontsource/montserrat';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ReplyIcon from '@mui/icons-material/Reply';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export default function Home() {
   return (
@@ -21,7 +22,16 @@ export default function Home() {
           <ul className="list-disc pl-6 text-md text-quaternary font-montserrat">
             <li>Login to your Spotify account.</li>
             <li>Choose to get recommendations based on your top artists or search for any artist.</li>
-            <li>Listen to 20 seconds of each track.</li>
+            <li>
+              Press
+              {' '}
+              <PlayArrowIcon
+                style={{ color: '#1db954' }}
+              />
+              {' '}
+              to listen to 20 seconds of the featured track.
+
+            </li>
             <li>
               Use
               {' '}
