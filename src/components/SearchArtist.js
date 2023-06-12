@@ -1,5 +1,6 @@
 import { Search } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 import SearchResultsCard from './SearchResultsCard';
 
 export default function SearchArtist({
@@ -19,13 +20,14 @@ export default function SearchArtist({
       if (!accessToken || accessToken === 'undefined') {
         router.push('/login');
       } else {
-        handleSearchArtist(accessToken);
+        const sanitizedArtist = DOMPurify.sanitize(searchedArtist);
+        handleSearchArtist(accessToken, sanitizedArtist);
       }
     }
   }, [searchedArtist]);
 
-  async function handleSearchArtist(accessToken) {
-    const res = await fetch(`https://api.spotify.com/v1/search?q=${searchedArtist}&type=artist&limit=5`, {
+  async function handleSearchArtist(accessToken, artist) {
+    const res = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(artist)}&type=artist&limit=5`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${accessToken}`,
