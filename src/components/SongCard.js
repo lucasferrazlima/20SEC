@@ -21,10 +21,14 @@ export default function SongCard({
         className=" w-full sm:w-full "
       />
       <div className="flex flex-col self-start mt-2 w-11/12">
-        <h3 className="text-sm truncate">{track.name}</h3>
-        <p className="text-quaternary text-sm truncate">
-          {track.artists.map((artist) => artist.name).join(', ')}
-        </p>
+        <a href={track.external_urls.spotify} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <h3 className="text-sm truncate">{track.name}</h3>
+        </a>
+        <a href={track.artists[0].external_urls.spotify} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <p className="text-quaternary text-sm truncate">
+            {track.artists.map((artist) => artist.name).join(', ')}
+          </p>
+        </a>
       </div>
       <div className="mt-2 flex items-center justify-around w-full">
         <button
