@@ -1,7 +1,4 @@
 import './globals.css';
-import { Inter, s } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: '20SEC',

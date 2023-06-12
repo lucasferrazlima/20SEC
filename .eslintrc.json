@@ -16,6 +16,8 @@
         "no-shadow": "off",
         "camelcase": "off",
         "no-unused-vars": "off",
-        "no-undef": "off"
+        "no-undef": "off",
+        "no-plusplus": "off",
+        "max-len": "off"
     }
 }

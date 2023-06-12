@@ -37,7 +37,7 @@ export default function Home() {
               {' '}
               <ReplyIcon style={{ color: '#1db954' }} />
               {' '}
-              for tracks you don't like or already know.
+              for tracks you don&apos;t like or already know.
             </li>
             <li>
               Use

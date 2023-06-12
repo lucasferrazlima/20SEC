@@ -8,11 +8,11 @@ export default function HoverMessage() {
         </p>
         <ol className="mb-2 list-decimal list-inside">
           <li>Open your Spotify app on your device.</li>
-          <li>Check that the selected device is set to "20SEC".</li>
+          <li>Check that the selected device is set to &quot;20SEC&quot;.</li>
           <li>Press the play button within the Spotify app and wait until the song starts playing.</li>
         </ol>
         <p>
-          After the song starts playing in the app, you can switch back to using "20SEC" solely through the browser application.
+          After the song starts playing in the app, you can switch back to using &quot;20SEC&quot; solely through the browser application.
         </p>
       </div>
     </div>
