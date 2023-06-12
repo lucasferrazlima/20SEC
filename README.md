@@ -2,6 +2,8 @@
 
 This project is a web application that allows users to discover new music on Spotify and create playlists based on their preferences.
 
+Inspired by [Divide-By-0](https://github.com/Divide-By-0/)'s [Ideas for Software that People Would Actually Use](https://github.com/Divide-By-0/ideas-for-projects-people-would-use) 
+
 ## Features
 
 - Choose to get recommendations based on your top artists or search for any artist.
