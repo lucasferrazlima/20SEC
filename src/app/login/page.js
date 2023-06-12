@@ -40,7 +40,7 @@ export default function LoginPage() {
     const params = new URLSearchParams();
     params.append('client_id', clientId);
     params.append('response_type', 'code');
-    params.append('redirect_uri', 'http://localhost:3000/login');
+    params.append('redirect_uri', 'https://20sec-mu.vercel.app/login');
     params.append('scope', 'user-read-private user-read-email user-top-read user-modify-playback-state user-read-playback-state user-read-currently-playing streaming playlist-modify-public playlist-modify-private');
     params.append('code_challenge_method', 'S256');
     params.append('code_challenge', challenge);
@@ -74,7 +74,7 @@ export default function LoginPage() {
     params.append('client_id', clientId);
     params.append('grant_type', 'authorization_code');
     params.append('code', code);
-    params.append('redirect_uri', 'http://localhost:3000/login');
+    params.append('redirect_uri', 'https://20sec-mu.vercel.app/login');
     params.append('code_verifier', verifier);
 
     const result = await fetch('https://accounts.spotify.com/api/token', {
