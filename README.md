@@ -2,6 +2,8 @@
 
 This project is a web application that allows users to discover new music on Spotify and create playlists based on their preferences.
 
+Currently in Spotify's development mode quota. If you wish to test or contribute to this application, please provide your spotify username so it can be added to the app's allowlist.
+
 Inspired by [Divide-By-0](https://github.com/Divide-By-0/)'s [Ideas for Software that People Would Actually Use](https://github.com/Divide-By-0/ideas-for-projects-people-would-use) 
 
 ## Features
