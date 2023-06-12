@@ -1,15 +1,9 @@
 import { useState, useEffect } from 'react';
 
 export default function SearchResultsCard({
-  searchResults,
-  setSearchResults,
   result,
-  recommendedTracks,
   setRecommendedTracks,
-  searchedArtist,
   setSearchedArtist,
-  recommendationType,
-  setRecommendationType,
 }) {
   const [selectedArtistId, setSelectedArtistId] = useState(null);
 

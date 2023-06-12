@@ -1,13 +1,12 @@
 'use client';
 
-import SearchArtist from '@/components/SearchArtist';
+import SearchArtist from './SearchArtist';
 
 export default function SelectRecommendation({
   recommendationType,
   setRecommendationType,
   searchedArtist,
   setSearchedArtist,
-  recommendedTracks,
   setRecommendedTracks,
 }) {
   return (
@@ -43,10 +42,7 @@ export default function SelectRecommendation({
             <SearchArtist
               searchedArtist={searchedArtist}
               setSearchedArtist={setSearchedArtist}
-              recommendedTracks={recommendedTracks}
               setRecommendedTracks={setRecommendedTracks}
-              recommendationType={recommendationType}
-              setRecommendationType={setRecommendationType}
             />
           ) : null
 }

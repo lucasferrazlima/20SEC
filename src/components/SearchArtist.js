@@ -4,11 +4,8 @@ import DOMPurify from 'dompurify';
 import SearchResultsCard from './SearchResultsCard';
 
 export default function SearchArtist({
-  recommendationType,
-  setRecommendationType,
   searchedArtist,
   setSearchedArtist,
-  recommendedTracks,
   setRecommendedTracks,
 }) {
   const [searchResults, setSearchResults] = useState([]);
@@ -53,12 +50,8 @@ export default function SearchArtist({
           <li key={result.id} className=" ml-4">
             <SearchResultsCard
               result={result}
-              recommendedTracks={recommendedTracks}
               setRecommendedTracks={setRecommendedTracks}
-              searchedArtist={searchedArtist}
               setSearchedArtist={setSearchedArtist}
-              recommendationType={recommendationType}
-              setRecommendationType={setRecommendationType}
             />
           </li>
         )) : null

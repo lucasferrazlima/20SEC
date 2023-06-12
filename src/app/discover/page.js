@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Helmet } from 'react-helmet';
 
 import '@fontsource/bebas-neue';
-import SongCard from '@/components/SongCard';
-import SelectRecommendation from '@/components/SelectRecommendation';
+import SongCard from '../../components/SongCard';
+import SelectRecommendation from '../../components/SelectRecommendation';
 
 export default function DiscoverPage() {
   const [topArtists, setTopArtists] = useState([]);
@@ -15,13 +14,11 @@ export default function DiscoverPage() {
 
   const [likedTracks, setLikedTracks] = useState([]);
   const [dislikedTracks, setDislikedTracks] = useState([]);
-  const [knownTracks, setKnownTracks] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [player, setPlayer] = useState(undefined);
   const [deviceList, setDeviceList] = useState([]);
   const [recommendationType, setRecommendationType] = useState('top artists');
   const [searchedArtist, setSearchedArtist] = useState('');
-  const [topArtistsFetched, setTopArtistsFetched] = useState(true);
 
   const router = useRouter();
 
@@ -54,7 +51,7 @@ export default function DiscoverPage() {
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
       const player = new Spotify.Player({
-        name: 'New Music Discoverer',
+        name: '20SEC',
         getOAuthToken: async (callback) => {
           const accessToken = localStorage.getItem('token');
           callback(accessToken);
@@ -147,7 +144,7 @@ export default function DiscoverPage() {
   // function for playing track using web playback SDK
   const handlePlay = async () => {
     try {
-      const deviceName = 'New Music Discoverer';
+      const deviceName = '20SEC';
       const device = deviceList.find((device) => device.name === deviceName);
 
       if (!device) {
@@ -240,7 +237,6 @@ export default function DiscoverPage() {
         setRecommendationType={setRecommendationType}
         searchedArtist={searchedArtist}
         setSearchedArtist={setSearchedArtist}
-        recommendedTracks={recommendedTracks}
         setRecommendedTracks={setRecommendedTracks}
       />
       {
