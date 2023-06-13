@@ -1,6 +1,6 @@
 # 20SEC
 
-This project is a web application that allows users to discover new music on Spotify and create playlists based on their preferences.
+Discover and create personalized Spotify playlists with 20-second song previews. Simple, intuitive, and enjoyable music exploration.
 
 Currently in Spotify's development mode quota. If you wish to test or contribute to this application, please provide your spotify username so it can be added to the app's allowlist.
 
