@@ -6,8 +6,7 @@ Currently in Spotify's development mode quota. If you wish to test or contribute
 
 Inspired by [Divide-By-0](https://github.com/Divide-By-0/)'s [Ideas for Software that People Would Actually Use](https://github.com/Divide-By-0/ideas-for-projects-people-would-use) 
 
-![screely-1686665744798](https://github.com/lucasferrazlima/20SEC/assets/98855058/92ba4874-b81e-4e36-8886-88cd4c482c14)
-![screely-1686665869609](https://github.com/lucasferrazlima/20SEC/assets/98855058/4a1887b5-1c93-455c-bc69-5376c5020555)
+![7be80705-73bb-4500-b947-94390a0ef4fa](https://github.com/lucasferrazlima/20SEC/assets/98855058/c60459e7-294d-4869-968b-f17e9eb67fb6)
 
 ## Features
 
