@@ -10,7 +10,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen bg-secondary">
       <div className="max-w-md px-6 py-12 bg-secondary shadow-lg h-screen sm:rounded-lg sm:h-auto">
         <div className="flex items-center justify-center mb-8 gap-3 border-b-2 pb-6 border-gray-100">
           <h1 className="text-4xl text-primary font-bebas md:text-5xl">20SEC</h1>
