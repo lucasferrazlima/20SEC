@@ -6,6 +6,9 @@ Currently in Spotify's development mode quota. If you wish to test or contribute
 
 Inspired by [Divide-By-0](https://github.com/Divide-By-0/)'s [Ideas for Software that People Would Actually Use](https://github.com/Divide-By-0/ideas-for-projects-people-would-use) 
 
+![screely-1686665744798](https://github.com/lucasferrazlima/20SEC/assets/98855058/92ba4874-b81e-4e36-8886-88cd4c482c14)
+![screely-1686665869609](https://github.com/lucasferrazlima/20SEC/assets/98855058/4a1887b5-1c93-455c-bc69-5376c5020555)
+
 ## Features
 
 - Choose to get recommendations based on your top artists or search for any artist.
@@ -17,6 +20,7 @@ Inspired by [Divide-By-0](https://github.com/Divide-By-0/)'s [Ideas for Software
 - React - JavaScript library for building user interfaces.
 - Next.js - React framework for server-side rendering and static site generation.
 - Tailwind CSS - Utility-first CSS framework.
+- OAuth - Authentication and authorization protocol for secure user login and access to Spotify features.
 
 ## Contributing
 
